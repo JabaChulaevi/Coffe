@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ember &amp; Oak Coffee Roasters</title>
+<meta name="description" content="Small-batch coffee roasted in 12 kg lots, with every roast curve logged.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 60 80'%3E%3Cellipse cx='30' cy='40' rx='24' ry='34' fill='%236b3a1f' transform='rotate(-18 30 40)'/%3E%3C/svg%3E">
+<!-- Optional web font (Bricolage Grotesque, Google Fonts). The site falls back to system fonts offline. -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@400..800&display=swap">
+<link rel="stylesheet" href="style.css">
+<script src="script.js" defer></script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="site-header">
+  <div class="wrap bar">
+    <a class="logo" href="#top">Ember &amp; Oak</a>
+    <button class="chip menu-btn" type="button" aria-expanded="false" aria-controls="nav">Menu</button>
+    <nav id="nav" aria-label="Main">
+      <ul>
+        <li><a href="#roasts">Roasts</a></li>
+        <li><a href="#brew">Brew guide</a></li>
+        <li><a href="#story">Our roasting</a></li>
+        <li><a href="#visit">Visit</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+  <section class="hero" id="top">
+    <div class="wrap hero-grid">
+      <div>
+        <h1>Every roast is a curve.</h1>
+        <p class="lede">We log every one. Drag through a twelve-minute roast and watch a green seed become coffee.</p>
+        <div class="cta">
+          <a class="btn" href="#roasts">Choose a roast</a>
+          <a class="btn ghost" href="#brew">Plan a brew</a>
+        </div>
+      </div>
+
+      <div class="instrument">
+        <svg class="chart" viewBox="0 0 640 270" role="img" aria-label="Roast curve: bean temperature in degrees Celsius over twelve minutes">
+          <path class="axis" d="M56 209H620M56 130H620M56 51H620"/>
+          <g class="tick" text-anchor="end"><text x="48" y="215">100°</text><text x="48" y="136">150°</text><text x="48" y="57">200°</text></g>
+          <g class="tick" text-anchor="middle"><text x="56" y="263">0</text><text x="197" y="263">3</text><text x="338" y="263">6</text><text x="479" y="263">9</text><text x="598" y="263">12 min</text></g>
+          <path id="ghost" class="ghost-line"/>
+          <path id="trace" class="trace"/>
+          <circle id="dot" class="dot" r="9"/>
+        </svg>
+        <label class="lbl" for="scrub">Roast time</label>
+        <input id="scrub" type="range" min="0" max="12" step="0.1" value="0">
+        <div class="readrow">
+          <svg class="bean" viewBox="0 0 60 80" aria-hidden="true">
+            <g transform="rotate(-18 30 40)">
+              <ellipse cx="30" cy="40" rx="24" ry="34" style="fill:var(--bean)"/>
+              <path d="M30 8C42 28 18 52 30 72" fill="none" stroke="#000" stroke-opacity=".35" stroke-width="3" stroke-linecap="round"/>
+            </g>
+          </svg>
+          <dl class="readout">
+            <div><dt>Time</dt><dd id="r-time">0:00</dd></div>
+            <div><dt>Bean temperature</dt><dd id="r-temp">200 °C</dd></div>
+            <div><dt>Stage</dt><dd id="r-stage">Drying</dd></div>
+          </dl>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section wrap" id="roasts">
+    <h2>This month's roasts</h2>
+    <p class="lede">Six coffees, each roasted to the point on the curve that suits it. Pick a level and the curve above jumps to it.</p>
+    <div class="chips" role="group" aria-label="Filter by roast level">
+      <button class="chip" type="button" data-level="all" aria-pressed="true">All</button>
+      <button class="chip" type="button" data-level="light" aria-pressed="false">Light</button>
+      <button class="chip" type="button" data-level="medium" aria-pressed="false">Medium</button>
+      <button class="chip" type="button" data-level="dark" aria-pressed="false">Dark</button>
+    </div>
+    <p class="status" id="status" role="status"></p>
+    <ul class="roasts" id="roast-list"></ul>
+  </section>
+
+  <section class="section dark" id="brew">
+    <div class="wrap brew">
+      <div>
+        <h2>Brew guide</h2>
+        <p class="lede">Choose how you brew and how many servings. We work out the dose, so there is no scale maths at 7 a.m.</p>
+      </div>
+      <div class="panel" role="group" aria-label="Brew calculator">
+        <div>
+          <label for="method">Method</label>
+          <select id="method">
+            <option value="v60">Pour-over (V60)</option>
+            <option value="press">French press</option>
+            <option value="aero">AeroPress</option>
+            <option value="espresso">Espresso (double)</option>
+            <option value="moka">Moka pot</option>
+          </select>
+        </div>
+        <div>
+          <label for="cups">Servings: <output id="cups-out" for="cups">2</output></label>
+          <input id="cups" type="range" min="1" max="8" value="2">
+        </div>
+        <dl class="out">
+          <div><dt>Coffee</dt><dd class="num" id="o-coffee"></dd></div>
+          <div><dt>Water</dt><dd class="num" id="o-water"></dd></div>
+          <div><dt>Grind</dt><dd class="txt" id="o-grind"></dd></div>
+          <div><dt>Brew time</dt><dd class="txt" id="o-time"></dd></div>
+        </dl>
+        <div><button class="btn" type="button" id="copy">Copy recipe</button></div>
+        <p id="brew-note" role="status"></p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section wrap" id="story">
+    <div class="story">
+      <h2>Small batches, written down</h2>
+      <p>We roast twelve kilos at a time on a refurbished drum roaster and record the temperature every few seconds. Each coffee has a recipe, and the recipe is a curve.</p>
+      <p>If a batch drifts more than a degree from its curve, we dump it and start again. Whatever ships has been roasted within the last 48 hours, so the bag you open is still waking up.</p>
+    </div>
+  </section>
+
+  <section class="section wrap visit" id="visit">
+    <div>
+      <h2>Visit the roastery</h2>
+      <p class="lede">12 Kiln Lane. Come for a cupping, a bag, or a seat at the tasting bar to watch a roast.</p>
+      <dl class="hours">
+        <dt>Tuesday to Friday</dt><dd>8:00 to 16:00</dd>
+        <dt>Saturday</dt><dd>9:00 to 17:00</dd>
+        <dt>Sunday and Monday</dt><dd>Closed</dd>
+      </dl>
+    </div>
+    <form id="contact" novalidate>
+      <div class="field">
+        <label for="c-name">Your name</label>
+        <input id="c-name" autocomplete="name" aria-invalid="false" aria-describedby="err-name">
+        <p class="err" id="err-name"></p>
+      </div>
+      <div class="field">
+        <label for="c-email">Email</label>
+        <input id="c-email" type="email" autocomplete="email" aria-invalid="false" aria-describedby="err-email">
+        <p class="err" id="err-email"></p>
+      </div>
+      <div class="field">
+        <label for="c-topic">What is this about?</label>
+        <select id="c-topic">
+          <option>Booking a cupping</option>
+          <option>Wholesale for a cafe</option>
+          <option>Something else</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="c-message">Message</label>
+        <textarea id="c-message" aria-invalid="false" aria-describedby="err-message"></textarea>
+        <p class="err" id="err-message"></p>
+      </div>
+      <button class="btn" type="submit">Send message</button>
+      <p class="ok" id="form-status" role="status"></p>
+    </form>
+  </section>
+</main>
+
+<footer class="wrap foot">
+  <p>&copy; <span id="year">2026</span> Ember &amp; Oak Coffee Roasters</p>
+  <a href="#top">Back to top</a>
+</footer>
+</body>
+</html>
